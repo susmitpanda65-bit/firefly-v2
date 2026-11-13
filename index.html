@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#07111c"><meta name="description" content="Explore how flames behave in microgravity, compare NASA fire experiments, and learn how research helps protect crews in space.">
-<title>EMBER — Fire in Space, Understood</title>
+<title>EMBER — Fire in Space, Understood
+</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 :root{--bg:#07111c;--panel:#0d1c29;--panel2:#102432;--line:#203542;--muted:#9aadb6;--text:#edf4f2;--lime:#d5f36a;--orange:#ff8457;--cyan:#7ce1d2;--display:'Space Grotesk',sans-serif;--body:'DM Sans',sans-serif;--mono:'DM Mono',monospace}
@@ -11,6 +12,15 @@
 @keyframes float{50%{transform:translateY(-9px) rotate(2deg)}}@keyframes flicker{to{transform:scaleX(.86) skewX(-3deg)}}@keyframes breathe{50%{transform:scale(1.06);filter:drop-shadow(0 0 25px #ffb55e88)}}@keyframes blink{50%{opacity:.2;transform:scale(.6)}}@keyframes scan{to{top:90%}}
 @media(max-width:820px){.navlinks{gap:14px}.nav-cta{display:none}.hero-inner{grid-template-columns:1fr .7fr}.visual{transform:scale(.85);margin:0 -40px}.lab-grid{grid-template-columns:1fr}.case-grid{grid-template-columns:1fr 1fr}.case:last-child{grid-column:span 2;min-height:240px}.safety-grid{gap:18px}.mission-strip{grid-template-columns:1fr 1fr}.mission-strip div:nth-child(2){border-right:0}.mission-strip div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
 @media(max-width:600px){.wrap{width:min(100% - 32px,520px)}.topline{font-size:9px}.nav{height:64px}.brand{font-size:17px}.navlinks{gap:12px;font-size:10px}.navlinks a:nth-child(2){display:none}.hero{padding:53px 0 65px}.hero-inner{grid-template-columns:1fr;gap:0}.hero-copy{font-size:14px}.hero h1{font-size:55px}.visual{min-height:270px;transform:scale(.74);margin:-20px 0 -40px}.scroll-cue{display:none}.section{padding:65px 0}.section-head{display:block}.section-intro{margin-top:14px}.card{padding:18px}.compare-stage{height:205px;padding-inline:8px}.flame-earth{height:78px}.flame-space{height:70px}.case-grid,.safety-grid,.spinoff-grid{grid-template-columns:1fr}.case:last-child{grid-column:auto}.case{min-height:245px}.lesson{align-items:flex-start}.safety-visual{min-height:300px}.source-list{grid-template-columns:1fr}.footer{display:block;line-height:2}.chart-legend{gap:10px}.chart-bottom{font-size:8px}}
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
 </style>
 </head>
 <body>
@@ -30,5 +40,26 @@ const modes={micro:{label:'ORBIT · ~0 g',note:'More rounded',legend:'ORBIT · ~
 document.querySelectorAll('[data-mode]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-mode]').forEach(b=>{b.classList.toggle('active',b===btn);b.setAttribute('aria-pressed',b===btn)});const m=modes[btn.dataset.mode];document.getElementById('spaceLabel').textContent=m.label;document.getElementById('legendSpace').textContent=m.legend;document.getElementById('shapeNote').textContent=m.note;document.getElementById('gravityInsight').innerHTML='<b>What changes?</b> '+m.copy;document.getElementById('spaceLine').setAttribute('d',m.space)}));
 const expData={flame:{earth:'M55 153 C85 149 94 53 130 34 S184 49 219 40 S270 54 300 39 S353 45 383 33 S438 49 502 37',space:'M55 153 C86 136 107 72 147 48 S210 56 251 45 S307 55 347 46 S412 51 452 42 S481 47 502 44'},smoke:{earth:'M55 153 C95 153 120 133 155 116 S220 95 255 88 S322 83 360 69 S430 63 502 59',space:'M55 153 C90 147 123 124 162 106 S230 96 267 84 S333 78 374 71 S436 68 502 64'},suppression:{earth:'M55 153 C95 147 115 84 150 47 S212 42 251 65 S304 107 344 129 S420 149 502 152',space:'M55 153 C95 149 124 103 162 67 S224 59 263 77 S318 112 357 133 S425 150 502 153'}};
 document.querySelectorAll('[data-exp]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-exp]').forEach(b=>b.classList.toggle('active',b===btn));const d=expData[btn.dataset.exp];document.getElementById('earthLine').setAttribute('d',d.earth);document.getElementById('spaceLine').setAttribute('d',d.space)}));
+  // Scroll Reveal Effect
+document.addEventListener('DOMContentLoaded', () => {
+  // Select the elements we want to animate
+  const elementsToReveal = document.querySelectorAll('.card, .case, .safety-item, .spin-card, .mission-strip');
+  
+  // Apply the starting CSS class to them
+  elementsToReveal.forEach(el => el.classList.add('reveal'));
+
+  // Create an observer to watch when they enter the screen
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        observer.unobserve(entry.target); // Stops animating once revealed
+      }
+    });
+  }, { threshold: 0.15 }); // Triggers when 15% of the element is visible
+
+  // Start observing
+  elementsToReveal.forEach(el => observer.observe(el));
+});
 </script>
 </body></html>
